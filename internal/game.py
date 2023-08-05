@@ -32,7 +32,6 @@ class sweeper :
   def shutdown(self) :
     pygame.quit()
 
-
   # implementation
 
   #

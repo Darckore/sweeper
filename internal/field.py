@@ -5,6 +5,15 @@
 import pygame
 
 #
+# A cell on a board
+#
+class cell :
+  def __init__(self, points : list) :
+    self.points = points
+    self.neighbours = []
+
+
+#
 # Rectangular minefield
 #
 class rect_field :
@@ -14,6 +23,7 @@ class rect_field :
     self.cols = cols
     self.rows = rows
     self.dimensions = (self.cols * rect_field.cellSide, self.rows * rect_field.cellSide)
+    self.cells = []
 
   # interface
 
