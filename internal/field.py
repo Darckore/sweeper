@@ -4,8 +4,6 @@
 
 import pygame
 
-from enum import Enum
-
 #
 # Rectangular minefield
 #
