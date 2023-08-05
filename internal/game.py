@@ -10,9 +10,30 @@ from internal.field import board
 # Inits things and runs the main loop
 #
 class sweeper :
-  def __init__(self, canvasSize : tuple[int, int]) :
-    self.canvas = self.__initial_setup(canvasSize)
-    self.board = board(canvasSize[0], canvasSize[1])
+  def __init__(self) :
+    initialSize = (500, 500)
+    self.board = board()
+    self.canvas = self.__initial_setup(initialSize)
+
+  # interface
+
+  #
+  # Runs the main loop
+  #
+  def run(self) :
+    canvasSz = self.board.make_rect(15, 10)
+    self.canvas = self.__set_canvas_size(canvasSz)
+    while self.__poll_events() :
+      self.__present()
+
+  #
+  # I'm outta here
+  #
+  def shutdown(self) :
+    pygame.quit()
+
+
+  # implementation
 
   #
   # Inits the window and returns the resulting surface
@@ -44,17 +65,3 @@ class sweeper :
   def __present(self) :
     self.board.draw(self.canvas)
     pygame.display.flip()
-
-  #
-  # Runs the main loop
-  #
-  def run(self) :
-    self.board.set_mode(15, 10)
-    while self.__poll_events() :
-      self.__present()
-
-  #
-  # I'm outta here
-  #
-  def shutdown(self) :
-    pygame.quit()

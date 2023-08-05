@@ -1,7 +1,7 @@
 from internal.game import sweeper
 
 def main() :
-  game = sweeper((500, 500)) # todo: don't hard-code
+  game = sweeper()
   game.run()
   game.shutdown()
 
