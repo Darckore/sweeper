@@ -1,3 +1,7 @@
+#
+# Entry
+#
+
 from internal.game import sweeper
 
 def main() :

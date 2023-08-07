@@ -56,7 +56,7 @@ class sweeper :
       if evt.type == pygame.QUIT :
         return False
       if evt.type == pygame.MOUSEMOTION :
-        self.board.highlight(self.canvas, pygame.mouse.get_pos())
+        self.board.highlight(pygame.mouse.get_pos())
     
     return True
 
