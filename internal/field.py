@@ -4,6 +4,7 @@
 
 import pygame
 
+from internal.boards import cell
 from internal.boards import rect_field
 
 #
@@ -21,6 +22,7 @@ class board :
     self.activeCell = None
     self.cells = []
     self.mouseBtns = (False, False, False)
+    self.going = False
 
   # interface
 
@@ -63,6 +65,8 @@ class board :
       return
 
     if btns[0] != self.mouseBtns[0] :
+      self.__place_mines()
+      self.__left_click()
       print(f'left: {self.activeCell.centre}') # dbg
     elif btns[1] != self.mouseBtns[1]:
       print(f'middle: {self.activeCell.centre}') # dbg
@@ -72,6 +76,16 @@ class board :
     self.store_btns(btns)
 
   # implementation
+
+  def __place_mines(self) :
+    if self.going or self.activeCell is None :
+      return
+    pass # todo: rnd the mines
+
+  def __left_click(self) :
+    if self.activeCell is None :
+      return
+    pass # todo: handle lmb click
 
   def __init_cells(self) :
     self.cells = self.minefield.make_cells()
