@@ -93,7 +93,7 @@ class rect_field :
           if x == 0 and y == 0 :
             continue
           neighbour = self.__cell_at(cells, col + x, row + y)
-          if neighbour != None :
+          if not neighbour is None :
             cell.neighbours.append(neighbour)
 
     return cells
