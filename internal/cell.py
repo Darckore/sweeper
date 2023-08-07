@@ -12,6 +12,7 @@ class cell :
     self.__neighbours = []
     self.__armed = False
     self.__visited = False
+    self.__minesAround = None
 
   # interface
 
@@ -37,6 +38,8 @@ class cell :
     return self.__centre
 
   def mines_around(self) :
+    if not self.__minesAround is None :
+      return self.__minesAround
     mineCount = 0
     for neighbour in self.__neighbours :
       if neighbour.is_armed() :

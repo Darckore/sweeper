@@ -59,8 +59,13 @@ class board :
         minefield.draw_cell(canvas, cell, self.boardColour, self.lineColour)
       else :
         minefield.draw_cell(canvas, cell, self.fillColour, self.lineColour)
+        self.__draw_mine_count(canvas, cell)
 
     self.__highlight_active(canvas)
+    # silly debug code
+    for cell in self.__cells :
+      if cell.is_armed() :
+        minefield.draw_cell(canvas, cell, (255,0,0), self.lineColour)
 
   #
   # Activates the cell the mouse is over
@@ -120,9 +125,18 @@ class board :
 
 
   def __open_cell(self, target : cell) :
+    if target.is_visited() :
+      return
     target.visit()
     if target.is_armed() :
       pass # todo : fail
+    if target.mines_around() != 0 :
+      return
+    for neighbour in target.neighbours() :
+      if neighbour.mines_around() != 0 :
+        neighbour.visit()
+      elif not neighbour.is_armed() :
+        self.__open_cell(neighbour)
 
 
   def __left_click(self) :
@@ -133,6 +147,15 @@ class board :
 
   def __init_cells(self) :
     self.__cells = self.__minefield.make_cells()
+
+
+  def __draw_mine_count(self, canvas : pygame.Surface, curCell : cell) :
+    mineCount = curCell.mines_around()
+    if mineCount == 0 :
+      return
+    # img = self.__sprites.image_at(mineCount - 1)
+    # img = pygame.transform.scale(img, (30, 30))
+    # canvas.blit(img, img.get_rect())
 
 
   def __highlight_active(self, canvas : pygame.Surface) :
