@@ -21,7 +21,7 @@ class sweeper :
   # Runs the main loop
   #
   def run(self) :
-    canvasSz = self.__board.make_rect(32, 18)
+    canvasSz = self.__board.make_rect(32, 18, 100)
     self.__canvas = self.__set_canvas_size(canvasSz)
     while self.__poll_events() :
       self.__present()

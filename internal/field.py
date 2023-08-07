@@ -3,6 +3,7 @@
 #
 
 import pygame
+import random
 
 from internal.boards import rect_field
 
@@ -22,13 +23,15 @@ class board :
     self.__cells = []
     self.__mouseBtns = (False, False, False)
     self.__going = False
+    self.__mineCount = 0
 
   # interface
 
   #
   # Inits a rectangular minefield
   #
-  def make_rect(self, cols : int, rows : int) -> tuple[int, int] :
+  def make_rect(self, cols : int, rows : int, mines : int) -> tuple[int, int] :
+    self.__mineCount = mines
     self.__minefield = rect_field(cols, rows)
     self.__init_cells()
     return self.__minefield.dimensions()
@@ -67,9 +70,9 @@ class board :
       self.__place_mines()
       self.__left_click()
     elif self.__released(1, btns) :
-      print(f'middle: {self.__activeCell.__centre}') # dbg
+      pass
     elif self.__released(2, btns) :
-      print(f'right: {self.__activeCell.__centre}') # dbg
+      pass
 
     self.store_btns(btns)
 
@@ -80,9 +83,24 @@ class board :
     return prevState and prevState != btns[btn]
 
   def __place_mines(self) :
+    totalCells = len(self.__cells)
+    if totalCells == 0 or totalCells < self.__mineCount :
+      return
+
     if self.__going or self.__activeCell is None :
       return
-    pass # todo: rnd the mines
+
+    minesLeft = self.__mineCount
+    while minesLeft > 0 :
+      rndIdx = random.randint(0, totalCells - 1)
+      selectedCell = self.__cells[rndIdx]
+      if selectedCell == self.__activeCell :
+        continue
+      if selectedCell.is_armed() :
+        continue
+      selectedCell.arm()
+      minesLeft -= 1
+
 
   def __left_click(self) :
     if self.__activeCell is None :
