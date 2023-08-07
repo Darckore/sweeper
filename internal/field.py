@@ -18,7 +18,7 @@ class cell :
 # Rectangular minefield
 #
 class rect_field :
-  cellSide = 50
+  cellSide = 30
 
   def __init__(self, cols : int, rows : int) :
     self.cols = cols
