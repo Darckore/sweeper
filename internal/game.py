@@ -5,6 +5,7 @@
 import pygame
 
 from internal.field import board
+from internal.spritesheet import strip
 
 #
 # Inits things and runs the main loop
@@ -14,6 +15,7 @@ class sweeper :
     initialSize = (500, 500)
     self.__board = board()
     self.__canvas = self.__initial_setup(initialSize)
+    self.__sprites = None
 
   # interface
 
@@ -23,6 +25,8 @@ class sweeper :
   def run(self) :
     canvasSz = self.__board.make_rect(32, 18, 100)
     self.__canvas = self.__set_canvas_size(canvasSz)
+    self.__load_res()
+    self.__board.attach_sprites(self.__sprites)
     while self.__poll_events() :
       self.__present()
 
@@ -33,6 +37,12 @@ class sweeper :
     pygame.quit()
 
   # implementation
+
+  #
+  # Loads resources
+  #
+  def __load_res(self) :
+    self.__sprites = strip('assets/numbers.png')
 
   #
   # Inits the window and returns the resulting surface
@@ -63,7 +73,7 @@ class sweeper :
         self.__board.store_btns(pygame.mouse.get_pressed())
       elif evt.type == pygame.MOUSEBUTTONUP :
         self.__board.make_active(pygame.mouse.get_pos())
-        self.__board.on_click(pygame.mouse.get_pressed())
+        self.__board.on_click(self.__canvas, pygame.mouse.get_pressed())
 
     return True
 

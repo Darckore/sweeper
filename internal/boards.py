@@ -57,14 +57,6 @@ class rect_field :
     pygame.draw.rect(canvas, lineColour, rect, 2)
 
   #
-  # Draws the rectangular board
-  #
-  def draw(self, canvas : pygame.Surface, cells : list[cell],
-                 boardColour : tuple[int, int, int], lineColour: tuple[int, int, int]) :
-    for cell in cells :
-      self.draw_cell(canvas, cell, boardColour, lineColour)
-
-  #
   # Gets the cell at the specified coordinates
   #
   def cell_at(self, cells : list[cell], col : int, row : int) -> cell :

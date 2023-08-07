@@ -28,3 +28,10 @@ class cell :
 
   def centre(self) :
     return self.__centre
+
+  def mines_around(self) :
+    mineCount = 0
+    for neighbour in self.__neighbours :
+      if neighbour.is_armed() :
+        mineCount += 1
+    return mineCount

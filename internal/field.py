@@ -5,7 +5,9 @@
 import pygame
 import random
 
+from internal.cell import cell
 from internal.boards import rect_field
+from internal.spritesheet import strip
 
 #
 # Handles game logic
@@ -24,8 +26,15 @@ class board :
     self.__mouseBtns = (False, False, False)
     self.__going = False
     self.__mineCount = 0
+    self.__sprites = None
 
   # interface
+
+  #
+  # Sets a spritesheet with number images
+  #
+  def attach_sprites(self, sprites : strip) :
+    self.__sprites = sprites
 
   #
   # Inits a rectangular minefield
@@ -41,10 +50,13 @@ class board :
   #
   def draw(self, canvas : pygame.Surface) :
     canvas.fill(self.fillColour)
-    if self.__minefield is None :
+    minefield = self.__minefield
+    if minefield is None :
       return
 
-    self.__minefield.draw(canvas, self.__cells, self.boardColour, self.lineColour)
+    for cell in self.__cells :
+      minefield.draw_cell(canvas, cell, self.boardColour, self.lineColour)
+
     self.__highlight_active(canvas)
 
   #
@@ -62,13 +74,13 @@ class board :
   #
   # Handles the click. This reacts to mouseup events
   #
-  def on_click(self, btns : tuple[bool, bool, bool]) :
+  def on_click(self, canvas : pygame.Surface, btns : tuple[bool, bool, bool]) :
     if self.__activeCell is None :
       return
 
     if self.__released(0, btns) :
       self.__place_mines()
-      self.__left_click()
+      self.__left_click(canvas)
     elif self.__released(1, btns) :
       pass
     elif self.__released(2, btns) :
@@ -81,6 +93,7 @@ class board :
   def __released(self, btn : int, btns : tuple[bool, bool, bool]) -> bool :
     prevState = self.__mouseBtns[btn]
     return prevState and prevState != btns[btn]
+
 
   def __place_mines(self) :
     totalCells = len(self.__cells)
@@ -102,13 +115,20 @@ class board :
       minesLeft -= 1
 
 
-  def __left_click(self) :
+  def __open_cell(self, canvas : pygame.Surface, target : cell) :
+    if target.is_armed() :
+      pass # todo : fail
+
+
+  def __left_click(self, canvas : pygame.Surface) :
     if self.__activeCell is None :
       return
-    pass # todo: handle lmb click
+    self.__open_cell(canvas, self.__activeCell)
+
 
   def __init_cells(self) :
     self.__cells = self.__minefield.make_cells()
+
 
   def __highlight_active(self, canvas : pygame.Surface) :
     if self.__activeCell is None :
