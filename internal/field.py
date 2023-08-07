@@ -39,7 +39,7 @@ class board :
     canvas.fill(self.fillColour)
     if self.minefield is None :
       return
-    
+
     self.minefield.draw(canvas, self.cells, self.boardColour, self.lineColour)
     self.__highlight_active(canvas)
 

@@ -55,7 +55,7 @@ class sweeper :
     for evt in pygame.event.get() :
       if evt.type == pygame.QUIT :
         return False
-      
+
       if evt.type == pygame.MOUSEMOTION :
         self.board.make_active(pygame.mouse.get_pos())
       elif evt.type == pygame.MOUSEBUTTONDOWN :
@@ -64,7 +64,7 @@ class sweeper :
       elif evt.type == pygame.MOUSEBUTTONUP :
         self.board.make_active(pygame.mouse.get_pos())
         self.board.on_click(pygame.mouse.get_pressed())
-    
+
     return True
 
   #
