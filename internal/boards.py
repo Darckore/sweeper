@@ -4,15 +4,7 @@
 
 import pygame
 
-#
-# A cell on a board
-#
-class cell :
-  def __init__(self, centre : tuple[float, float], points : list) :
-    self.points = points
-    self.centre = centre
-    self.neighbours = []
-
+from internal.cell import cell
 
 #
 # Rectangular minefield
@@ -21,22 +13,28 @@ class rect_field :
   cellSide = 30
 
   def __init__(self, cols : int, rows : int) :
-    self.cols = cols
-    self.rows = rows
+    self.__cols = cols
+    self.__rows = rows
     self.__maxIdx = cols * rows
-    self.dimensions = (self.cols * rect_field.cellSide, self.rows * rect_field.cellSide)
+    self.__dimensions = (self.__cols * rect_field.cellSide, self.__rows * rect_field.cellSide)
 
   # interface
+
+  #
+  # Returns the fitting canvas size
+  #
+  def dimensions(self) :
+    return self.__dimensions
 
   #
   # Inits the required number of cells
   #
   def make_cells(self) -> list[cell] :
     cells = []
-    for row in range (0, self.rows) :
+    for row in range (0, self.__rows) :
       top = row * self.cellSide
       shiftedRow = top + self.cellSide
-      for col in range (0, self.cols) :
+      for col in range (0, self.__cols) :
         left = col * self.cellSide
         shiftedCol = left + self.cellSide
         cells.append(cell((left + self.cellSide / 2, top + self.cellSide / 2),
@@ -54,7 +52,7 @@ class rect_field :
   #
   def draw_cell(self, canvas : pygame.Surface, cell : cell,
                 boardColour : tuple[int, int, int], lineColour: tuple[int, int, int]) :
-    rect = pygame.Rect(cell.points[0][0], cell.points[0][1], self.cellSide, self.cellSide)
+    rect = pygame.Rect(cell.points()[0][0], cell.points()[0][1], self.cellSide, self.cellSide)
     pygame.draw.rect(canvas, boardColour, rect)
     pygame.draw.rect(canvas, lineColour, rect, 2)
 
@@ -77,23 +75,23 @@ class rect_field :
   # implementation
 
   def __cell_at(self, cells : list[cell], col : int, row : int) -> cell :
-    if row < 0 or col < 0 or row >= self.rows or col >= self.cols :
+    if row < 0 or col < 0 or row >= self.__rows or col >= self.__cols :
       return None
-    idx = row * self.cols + col
+    idx = row * self.__cols + col
     if idx < 0 or idx >= self.__maxIdx :
       return None
     return cells[idx]
 
   def __init_neighbours(self, cells : list[cell]) -> list[cell]:
     for cell in cells :
-      col = int(cell.points[0][0] / self.cellSide)
-      row = int(cell.points[0][1] / self.cellSide)
+      col = int(cell.points()[0][0] / self.cellSide)
+      row = int(cell.points()[0][1] / self.cellSide)
       for y in range (-1, 2) :
         for x in range (-1, 2) :
           if x == 0 and y == 0 :
             continue
           neighbour = self.__cell_at(cells, col + x, row + y)
           if not neighbour is None :
-            cell.neighbours.append(neighbour)
+            cell.neighbours().append(neighbour)
 
     return cells

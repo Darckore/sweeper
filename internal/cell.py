@@ -1,0 +1,30 @@
+#
+# A board cell
+#
+
+#
+# A cell on a board
+#
+class cell :
+  def __init__(self, centre : tuple[float, float], points : list) :
+    self.__points = points
+    self.__centre = centre
+    self.__neighbours = []
+    self.__armed = False
+
+  # interface
+
+  def arm(self) :
+    self.__armed = True
+
+  def is_armed(self) :
+    return self.__armed
+
+  def points(self) :
+    return self.__points
+
+  def neighbours(self) :
+    return self.__neighbours
+
+  def centre(self) :
+    return self.__centre

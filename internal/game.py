@@ -12,8 +12,8 @@ from internal.field import board
 class sweeper :
   def __init__(self) :
     initialSize = (500, 500)
-    self.board = board()
-    self.canvas = self.__initial_setup(initialSize)
+    self.__board = board()
+    self.__canvas = self.__initial_setup(initialSize)
 
   # interface
 
@@ -21,8 +21,8 @@ class sweeper :
   # Runs the main loop
   #
   def run(self) :
-    canvasSz = self.board.make_rect(32, 18)
-    self.canvas = self.__set_canvas_size(canvasSz)
+    canvasSz = self.__board.make_rect(32, 18)
+    self.__canvas = self.__set_canvas_size(canvasSz)
     while self.__poll_events() :
       self.__present()
 
@@ -57,13 +57,13 @@ class sweeper :
         return False
 
       if evt.type == pygame.MOUSEMOTION :
-        self.board.make_active(pygame.mouse.get_pos())
+        self.__board.make_active(pygame.mouse.get_pos())
       elif evt.type == pygame.MOUSEBUTTONDOWN :
-        self.board.make_active(pygame.mouse.get_pos())
-        self.board.store_btns(pygame.mouse.get_pressed())
+        self.__board.make_active(pygame.mouse.get_pos())
+        self.__board.store_btns(pygame.mouse.get_pressed())
       elif evt.type == pygame.MOUSEBUTTONUP :
-        self.board.make_active(pygame.mouse.get_pos())
-        self.board.on_click(pygame.mouse.get_pressed())
+        self.__board.make_active(pygame.mouse.get_pos())
+        self.__board.on_click(pygame.mouse.get_pressed())
 
     return True
 
@@ -71,5 +71,5 @@ class sweeper :
   # Draws the board
   #
   def __present(self) :
-    self.board.draw(self.canvas)
+    self.__board.draw(self.__canvas)
     pygame.display.flip()
