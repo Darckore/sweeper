@@ -8,8 +8,9 @@ import pygame
 # A cell on a board
 #
 class cell :
-  def __init__(self, points : list) :
+  def __init__(self, centre : tuple[int, int], points : list) :
     self.points = points
+    self.centre = centre
     self.neighbours = []
 
 
@@ -23,9 +24,26 @@ class rect_field :
     self.cols = cols
     self.rows = rows
     self.dimensions = (self.cols * rect_field.cellSide, self.rows * rect_field.cellSide)
-    self.cells = []
 
   # interface
+
+  def make_cells(self) -> list :
+    cells = []
+    for row in range (0, self.rows) :
+      top = row * self.cellSide
+      shiftedRow = top + self.cellSide
+      for col in range (0, self.cols) :
+        left = col * self.cellSide
+        shiftedCol = left + self.cellSide
+        cells.append(cell((left + shiftedCol / 2, top + shiftedRow / 2),
+          [
+            (left, top),
+            (shiftedCol, top),
+            (left, shiftedRow),
+            (shiftedCol, shiftedRow)
+          ]))
+
+    return cells
 
   def draw(self, canvas : pygame.Surface) :
     self.__draw_grid(canvas)
@@ -51,6 +69,7 @@ class board :
 
   def __init__(self) :
     self.minefield = None
+    self.cells = []
 
   # interface
 
@@ -59,6 +78,7 @@ class board :
   #
   def make_rect(self, cols : int, rows : int) -> tuple[int, int] :
     self.minefield = rect_field(cols, rows)
+    self.cells = self.minefield.make_cells()
     return self.minefield.dimensions
 
   #
