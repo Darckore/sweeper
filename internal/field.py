@@ -45,26 +45,19 @@ class rect_field :
 
     return cells
 
-  def draw(self, canvas : pygame.Surface) :
-    self.__draw_grid(canvas)
-
-  # implementation
-
-  def __draw_grid(self, canvas : pygame.Surface) :
-    for col in range (0, self.cols + rect_field.cellSide) :
-      x = col * rect_field.cellSide
-      pygame.draw.line(canvas, board.lineColour, (x, 0), (x, self.dimensions[1]))
-
-    for row in range (0, self.rows + rect_field.cellSide) :
-      y = row * rect_field.cellSide
-      pygame.draw.line(canvas, board.lineColour, (0, y), (self.dimensions[0], y))
+  def draw(self, canvas : pygame.Surface, cells : list[cell],
+                 boardColour : tuple[int, int, int], lineColour: tuple[int, int, int]) :
+    for cell in cells :
+      rect = pygame.Rect(cell.points[0][0], cell.points[0][1], self.cellSide, self.cellSide)
+      pygame.draw.rect(canvas, boardColour, rect)
+      pygame.draw.rect(canvas, lineColour, rect, 2)
 
 
 #
 # Handles game logic
 #
 class board :
-  boardColour = (128, 128, 128)
+  boardColour = (0, 50, 50)
   lineColour  = (100, 100, 100)
 
   def __init__(self) :
@@ -89,4 +82,4 @@ class board :
     if self.minefield == None :
       return
     
-    self.minefield.draw(canvas)
+    self.minefield.draw(canvas, self.cells, self.boardColour, self.lineColour)
