@@ -73,7 +73,7 @@ class sweeper :
         self.__board.store_btns(pygame.mouse.get_pressed())
       elif evt.type == pygame.MOUSEBUTTONUP :
         self.__board.make_active(pygame.mouse.get_pos())
-        self.__board.on_click(self.__canvas, pygame.mouse.get_pressed())
+        self.__board.on_click(pygame.mouse.get_pressed())
 
     return True
 

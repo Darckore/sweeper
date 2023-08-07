@@ -11,6 +11,7 @@ class cell :
     self.__centre = centre
     self.__neighbours = []
     self.__armed = False
+    self.__visited = False
 
   # interface
 
@@ -19,6 +20,12 @@ class cell :
 
   def is_armed(self) :
     return self.__armed
+
+  def visit(self) :
+    self.__visited = True
+
+  def is_visited(self) :
+    return self.__visited
 
   def points(self) :
     return self.__points

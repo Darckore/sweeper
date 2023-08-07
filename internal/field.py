@@ -55,7 +55,10 @@ class board :
       return
 
     for cell in self.__cells :
-      minefield.draw_cell(canvas, cell, self.boardColour, self.lineColour)
+      if not cell.is_visited() :
+        minefield.draw_cell(canvas, cell, self.boardColour, self.lineColour)
+      else :
+        minefield.draw_cell(canvas, cell, self.fillColour, self.lineColour)
 
     self.__highlight_active(canvas)
 
@@ -74,13 +77,13 @@ class board :
   #
   # Handles the click. This reacts to mouseup events
   #
-  def on_click(self, canvas : pygame.Surface, btns : tuple[bool, bool, bool]) :
+  def on_click(self, btns : tuple[bool, bool, bool]) :
     if self.__activeCell is None :
       return
 
     if self.__released(0, btns) :
       self.__place_mines()
-      self.__left_click(canvas)
+      self.__left_click()
     elif self.__released(1, btns) :
       pass
     elif self.__released(2, btns) :
@@ -113,17 +116,19 @@ class board :
         continue
       selectedCell.arm()
       minesLeft -= 1
+    self.__going = True
 
 
-  def __open_cell(self, canvas : pygame.Surface, target : cell) :
+  def __open_cell(self, target : cell) :
+    target.visit()
     if target.is_armed() :
       pass # todo : fail
 
 
-  def __left_click(self, canvas : pygame.Surface) :
+  def __left_click(self) :
     if self.__activeCell is None :
       return
-    self.__open_cell(canvas, self.__activeCell)
+    self.__open_cell(self.__activeCell)
 
 
   def __init_cells(self) :
@@ -133,6 +138,9 @@ class board :
   def __highlight_active(self, canvas : pygame.Surface) :
     if self.__activeCell is None :
       return
-    self.__minefield.draw_cell(canvas, self.__activeCell, self.highlightColour, self.lineColour)
-    for heighbour in self.__activeCell.neighbours() :
-      self.__minefield.draw_cell(canvas, heighbour, self.neighboutHighlightColour, self.lineColour)
+    if not self.__activeCell.is_visited() :
+      self.__minefield.draw_cell(canvas, self.__activeCell, self.highlightColour, self.lineColour)
+    for neighbour in self.__activeCell.neighbours() :
+      if neighbour.is_visited() :
+        continue
+      self.__minefield.draw_cell(canvas, neighbour, self.neighboutHighlightColour, self.lineColour)
