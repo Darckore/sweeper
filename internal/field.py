@@ -115,6 +115,12 @@ class board :
     
     self.minefield.draw(canvas, self.cells, self.boardColour, self.lineColour)
 
+  #
+  # Highlights the cell the mouse is over
+  #
+  def highlight(self, canvas : pygame.Surface, pos : tuple[int, int]) :
+    pass
+
   # implementation
 
   def __init_cells(self) :
