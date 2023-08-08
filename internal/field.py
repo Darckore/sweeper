@@ -90,7 +90,7 @@ class board :
       self.__place_mines()
       self.__left_click()
     elif self.__released(1, btns) :
-      pass
+      self.__middle_click()
     elif self.__released(2, btns) :
       pass
 
@@ -124,6 +124,14 @@ class board :
     self.__going = True
 
 
+  def __expand_neighbours(self, target : cell) :
+    for neighbour in target.neighbours() :
+      if neighbour.mines_around() != 0 :
+        neighbour.visit()
+      elif not neighbour.is_armed() :
+        self.__open_cell(neighbour)
+
+
   def __open_cell(self, target : cell) :
     if target.is_visited() :
       return
@@ -132,17 +140,21 @@ class board :
       pass # todo : fail
     if target.mines_around() != 0 :
       return
-    for neighbour in target.neighbours() :
-      if neighbour.mines_around() != 0 :
-        neighbour.visit()
-      elif not neighbour.is_armed() :
-        self.__open_cell(neighbour)
+    self.__expand_neighbours(target)
 
 
   def __left_click(self) :
     if self.__activeCell is None :
       return
     self.__open_cell(self.__activeCell)
+
+
+  def __middle_click(self) :
+    if self.__activeCell is None :
+      return
+    if not self.__activeCell.is_visited() :
+      return
+    self.__expand_neighbours(self.__activeCell)
 
 
   def __init_cells(self) :
