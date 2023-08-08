@@ -221,6 +221,8 @@ class board :
 
 
   def __draw_mine_count(self, canvas : pygame.Surface, curCell : cell) :
+    if curCell.is_armed() :
+      return
     mineCount = curCell.mines_around()
     if mineCount == 0 :
       return
