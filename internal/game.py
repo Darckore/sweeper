@@ -42,7 +42,7 @@ class sweeper :
   # Loads resources
   #
   def __load_res(self) :
-    self.__sprites = strip('assets/numbers.png')
+    self.__sprites = strip('assets/field_sprites.png')
 
   #
   # Inits the window and returns the resulting surface
