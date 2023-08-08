@@ -24,7 +24,7 @@ class board :
   highlightColour = (0, 100, 30)
   neighboutHighlightColour = (0, 60, 30)
 
-  def __init__(self) :
+  def __reset(self) :
     self.__minefield  = None
     self.__activeCell = None
     self.__cells = []
@@ -35,6 +35,9 @@ class board :
     self.__cellsLeft   = 0
     self.__mineCount   = 0
     self.__sprites = None
+
+  def __init__(self) :
+    self.__reset()
 
   # interface
 
@@ -57,6 +60,7 @@ class board :
   # Inits a rectangular minefield
   #
   def make_rect(self, cols : int, rows : int, mines : int) -> tuple[int, int] :
+    self.__reset()
     self.__mineCount = mines
     self.__cellsLeft = cols * rows
     self.__minefield = rect_field(cols, rows)
@@ -114,16 +118,26 @@ class board :
 
     self.store_btns(btns)
 
+  #
+  # Is the game failed?
+  #
+  def failed(self) :
+    return self.__boom
+
+  #
+  # Is the game won?
+  #
+  def won(self) :
+    return self.__won
+
   # implementation
 
   def __game_done(self) :
     return self.__boom or self.__won
 
-
   def __released(self, btn : int, btns : tuple[bool, bool, bool]) -> bool :
     prevState = self.__mouseBtns[btn]
     return prevState and prevState != btns[btn]
-
 
   def __place_mines(self) :
     if self.__game_done() :
@@ -148,23 +162,17 @@ class board :
       minesLeft -= 1
     self.__going = True
 
-
   def __win(self) :
     self.__won = True
-    print('U WIN')
-
 
   def __go_boom(self) :
     self.__boom  = True
-    print('U DED')
-
 
   def __visit_cell(self, cell : cell) :
     if cell.is_visited() :
       return
     cell.visit()
     self.__cellsLeft -= 1
-
 
   def __expand_neighbours(self, target : cell, goBoom : bool) :
     for neighbour in target.neighbours() :
@@ -180,7 +188,6 @@ class board :
         continue
       self.__visit_cell(neighbour)
 
-
   def __open_cell(self, target : cell) :
     if target.is_visited() :
       return
@@ -194,7 +201,6 @@ class board :
       return
     self.__expand_neighbours(target, False)
 
-
   def __left_click(self) :
     actCell = self.__activeCell
     if actCell is None or self.__game_done() :
@@ -202,7 +208,6 @@ class board :
     if actCell.has_flag() :
       return
     self.__open_cell(actCell)
-
 
   def __middle_click(self) :
     actCell = self.__activeCell
@@ -214,7 +219,6 @@ class board :
       return
     self.__expand_neighbours(actCell, True)
 
-
   def __right_click(self) :
     actCell = self.__activeCell
     if actCell is None or self.__game_done() :
@@ -224,16 +228,13 @@ class board :
       return
     actCell.flip_flag()
 
-
   def __init_cells(self) :
     self.__cells = self.__minefield.make_cells()
-
 
   def __draw_image_at_index(self, canvas : pygame.Surface, idx : int, target : pygame.Rect) :
     img = self.__sprites.image_at(idx)
     img = pygame.transform.scale(img, (target.width, target.height))
     canvas.blit(img, target)
-
 
   def __draw_mine(self, canvas : pygame.Surface, curCell : cell) :
     armed = curCell.is_armed()
@@ -247,7 +248,6 @@ class board :
     else :
       self.__draw_image_at_index(canvas, self.okImageIdx, self.__minefield.get_rect(curCell))
 
-
   def __draw_mine_count(self, canvas : pygame.Surface, curCell : cell) :
     if curCell.is_armed() :
       return
@@ -256,12 +256,10 @@ class board :
       return
     self.__draw_image_at_index(canvas, mineCount - 1, self.__minefield.get_rect(curCell))
 
-
   def __draw_flag(self, canvas : pygame.Surface, target : cell) :
     if not target.has_flag() :
       return
     self.__draw_image_at_index(canvas, self.flagImageIdx, self.__minefield.get_rect(target))
-
 
   def __highlight_active(self, canvas : pygame.Surface) :
     actCell = self.__activeCell
