@@ -220,6 +220,7 @@ class board :
     if actCell is None or self.__game_done() :
       return
     if actCell.is_visited() :
+      self.__middle_click()
       return
     actCell.flip_flag()
 
