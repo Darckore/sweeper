@@ -13,6 +13,7 @@ from internal.spritesheet import strip
 # Handles game logic
 #
 class board :
+  flagImageIdx = 8
   fillColour  = (128, 128, 128)
   boardColour = (0, 50, 50)
   lineColour  = (100, 100, 100)
@@ -57,6 +58,7 @@ class board :
     for cell in self.__cells :
       if not cell.is_visited() :
         minefield.draw_cell(canvas, cell, self.boardColour, self.lineColour)
+        self.__draw_flag(canvas, cell)
       else :
         minefield.draw_cell(canvas, cell, self.fillColour, self.lineColour)
         self.__draw_mine_count(canvas, cell)
@@ -92,7 +94,7 @@ class board :
     elif self.__released(1, btns) :
       self.__middle_click()
     elif self.__released(2, btns) :
-      pass
+      self.__right_click()
 
     self.store_btns(btns)
 
@@ -157,25 +159,47 @@ class board :
     self.__expand_neighbours(self.__activeCell)
 
 
+  def __right_click(self) :
+    if self.__activeCell is None :
+      return
+    if self.__activeCell.is_visited() :
+      return
+    self.__activeCell.flip_flag()
+
+
   def __init_cells(self) :
     self.__cells = self.__minefield.make_cells()
+
+
+  def __draw_image_at_index(self, canvas : pygame.Surface, idx : int, target : pygame.Rect) :
+    img = self.__sprites.image_at(idx)
+    img = pygame.transform.scale(img, (target.width, target.height))
+    canvas.blit(img, target)
 
 
   def __draw_mine_count(self, canvas : pygame.Surface, curCell : cell) :
     mineCount = curCell.mines_around()
     if mineCount == 0 :
       return
-    img = self.__sprites.image_at(mineCount - 1)
-    img = pygame.transform.scale(img, (30, 30))
-    canvas.blit(img, self.__minefield.get_rect(curCell))
+    self.__draw_image_at_index(canvas, mineCount - 1, self.__minefield.get_rect(curCell))
+
+
+  def __draw_flag(self, canvas : pygame.Surface, target : cell) :
+    if not target.has_flag() :
+      return
+    self.__draw_image_at_index(canvas, self.flagImageIdx, self.__minefield.get_rect(target))
 
 
   def __highlight_active(self, canvas : pygame.Surface) :
-    if self.__activeCell is None :
+    actCell = self.__activeCell
+    if actCell is None :
       return
-    if not self.__activeCell.is_visited() :
-      self.__minefield.draw_cell(canvas, self.__activeCell, self.highlightColour, self.lineColour)
-    for neighbour in self.__activeCell.neighbours() :
+    if not actCell.is_visited() :
+      self.__minefield.draw_cell(canvas, actCell, self.highlightColour, self.lineColour)
+      self.__draw_flag(canvas, actCell)
+    
+    for neighbour in actCell.neighbours() :
       if neighbour.is_visited() :
         continue
       self.__minefield.draw_cell(canvas, neighbour, self.neighboutHighlightColour, self.lineColour)
+      self.__draw_flag(canvas, neighbour)

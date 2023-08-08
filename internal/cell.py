@@ -12,6 +12,7 @@ class cell :
     self.__neighbours = []
     self.__armed = False
     self.__visited = False
+    self.__flagged = False
     self.__minesAround = None
 
   # interface
@@ -27,6 +28,12 @@ class cell :
 
   def is_visited(self) :
     return self.__visited
+
+  def flip_flag(self) :
+    self.__flagged = not self.__flagged
+
+  def has_flag(self) :
+    return self.__flagged
 
   def points(self) :
     return self.__points
