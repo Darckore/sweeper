@@ -18,9 +18,9 @@ class board :
   okImageIdx   = 10
   failImageIdx = 11
 
-  fillColour  = (128, 128, 128)
+  fillColour  = (125, 180, 138)
   boardColour = (0, 50, 50)
-  lineColour  = (100, 100, 100)
+  lineColour  = (0, 0, 0)
   highlightColour = (0, 100, 30)
   neighboutHighlightColour = (0, 60, 30)
   detonatedBombColour = (255, 0, 0)
