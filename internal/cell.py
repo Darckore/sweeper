@@ -53,3 +53,10 @@ class cell :
         mineCount += 1
     self.__minesAround = mineCount
     return mineCount
+
+  def flags_around(self) :
+    flagCount = 0
+    for neighbour in self.__neighbours :
+      if neighbour.has_flag() :
+        flagCount += 1
+    return flagCount
