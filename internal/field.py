@@ -33,12 +33,15 @@ class board :
     self.__going = False
     self.__boom  = False
     self.__won   = False
-    self.__cellsLeft   = 0
-    self.__mineCount   = 0
+    self.__cellsLeft = 0
+    self.__mineCount = 0
+    self.__minesLeft = 0
+    self.__minesLeftPrev = 0
     self.__sprites = None
 
-  def __init__(self) :
+  def __init__(self, baseCaption) :
     self.__reset()
+    self.__baseCaption = baseCaption
 
   # interface
 
@@ -48,6 +51,10 @@ class board :
   def ping(self) :
     if self.__game_done() :
       return
+    if not self.__game_done() and self.__minesLeft != self.__minesLeftPrev :
+      gameCaption = '{} - {} mines left'.format(self.__baseCaption, self.__minesLeft)
+      pygame.display.set_caption(gameCaption)
+      self.__minesLeftPrev = self.__minesLeft
     if self.__cellsLeft == self.__mineCount :
       self.__win()
 
@@ -63,6 +70,7 @@ class board :
   def make_rect(self, cols : int, rows : int, mines : int) -> tuple[int, int] :
     self.__reset()
     self.__mineCount = mines
+    self.__minesLeft = mines
     self.__cellsLeft = cols * rows
     self.__minefield = rect_field(cols, rows)
     self.__init_cells()
@@ -167,9 +175,11 @@ class board :
     self.__going = True
 
   def __win(self) :
+    pygame.display.set_caption("{} - WIN".format(self.__baseCaption))
     self.__won = True
 
   def __go_boom(self) :
+    pygame.display.set_caption("{} - FAIL".format(self.__baseCaption))
     self.__boom  = True
 
   def __visit_cell(self, cell : cell) :
@@ -231,6 +241,10 @@ class board :
       self.__middle_click()
       return
     actCell.flip_flag()
+    if actCell.has_flag() :
+      self.__minesLeft -= 1
+    else :
+      self.__minesLeft += 1
 
   def __init_cells(self) :
     self.__cells = self.__minefield.make_cells()
