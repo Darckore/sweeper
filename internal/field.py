@@ -126,6 +126,10 @@ class board :
     self.__going = True
 
 
+  def __go_boom(self) :
+    print('U DED')
+
+
   def __expand_neighbours(self, target : cell) :
     for neighbour in target.neighbours() :
       if neighbour.mines_around() != 0 :
@@ -137,9 +141,12 @@ class board :
   def __open_cell(self, target : cell) :
     if target.is_visited() :
       return
+
     target.visit()
     if target.is_armed() :
-      pass # todo : fail
+      self.__go_boom()
+      return
+
     if target.mines_around() != 0 :
       return
     self.__expand_neighbours(target)
@@ -152,19 +159,23 @@ class board :
 
 
   def __middle_click(self) :
-    if self.__activeCell is None :
+    actCell = self.__activeCell
+    if actCell is None :
       return
-    if not self.__activeCell.is_visited() :
+    if not actCell.is_visited() :
       return
-    self.__expand_neighbours(self.__activeCell)
+    if actCell.flags_around() != actCell.mines_around() :
+      return
+    self.__expand_neighbours(actCell)
 
 
   def __right_click(self) :
-    if self.__activeCell is None :
+    actCell = self.__activeCell
+    if actCell is None :
       return
-    if self.__activeCell.is_visited() :
+    if actCell.is_visited() :
       return
-    self.__activeCell.flip_flag()
+    actCell.flip_flag()
 
 
   def __init_cells(self) :
