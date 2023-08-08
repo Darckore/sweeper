@@ -153,9 +153,9 @@ class board :
     mineCount = curCell.mines_around()
     if mineCount == 0 :
       return
-    # img = self.__sprites.image_at(mineCount - 1)
-    # img = pygame.transform.scale(img, (30, 30))
-    # canvas.blit(img, img.get_rect())
+    img = self.__sprites.image_at(mineCount - 1)
+    img = pygame.transform.scale(img, (30, 30))
+    canvas.blit(img, self.__minefield.get_rect(curCell))
 
 
   def __highlight_active(self, canvas : pygame.Surface) :

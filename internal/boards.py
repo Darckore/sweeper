@@ -64,6 +64,13 @@ class rect_field :
     y = int(row / self.cellSide)
     return self.__cell_at(cells, x, y)
 
+  #
+  # Gets a rect for the given cell
+  #
+  def get_rect(self, cell : cell) -> pygame.Rect :
+    points = cell.points()
+    return pygame.Rect(points[0][0], points[0][1], self.cellSide, self.cellSide)
+
   # implementation
 
   def __cell_at(self, cells : list[cell], col : int, row : int) -> cell :
