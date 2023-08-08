@@ -11,9 +11,11 @@ from internal.spritesheet import strip
 # Inits things and runs the main loop
 #
 class sweeper :
+  captionBase = 'Derpsweeper'
+
   def __init__(self) :
     initialSize = (500, 500)
-    self.__board = board()
+    self.__board = board(self.captionBase)
     self.__canvas = self.__initial_setup(initialSize)
     self.__sprites = None
 
@@ -49,7 +51,7 @@ class sweeper :
   #
   def __initial_setup(self, params : tuple[int, int]) :
     pygame.init()
-    pygame.display.set_caption('Derpsweeper')
+    pygame.display.set_caption(self.captionBase)
     return self.__set_canvas_size(params)
   
   #
