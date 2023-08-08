@@ -23,6 +23,7 @@ class board :
   lineColour  = (100, 100, 100)
   highlightColour = (0, 100, 30)
   neighboutHighlightColour = (0, 60, 30)
+  detonatedBombColour = (255, 0, 0)
 
   def __reset(self) :
     self.__minefield  = None
@@ -81,7 +82,10 @@ class board :
         minefield.draw_cell(canvas, cell, self.boardColour, self.lineColour)
         self.__draw_flag(canvas, cell)
       else :
-        minefield.draw_cell(canvas, cell, self.fillColour, self.lineColour)
+        if not cell.is_armed() :
+          minefield.draw_cell(canvas, cell, self.fillColour, self.lineColour)
+        else :
+          minefield.draw_cell(canvas, cell, self.detonatedBombColour, self.lineColour)
         self.__draw_mine_count(canvas, cell)
 
     self.__highlight_active(canvas)
