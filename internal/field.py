@@ -30,8 +30,11 @@ class board :
     self.__cells = []
     self.__mouseBtns = (False, False, False)
     self.__going = False
-    self.__boom = False
-    self.__mineCount = 0
+    self.__boom  = False
+    self.__won   = False
+    self.__cellsLeft   = 0
+    self.__flagsRaised = 0
+    self.__mineCount   = 0
     self.__sprites = None
 
   # interface
@@ -47,6 +50,7 @@ class board :
   #
   def make_rect(self, cols : int, rows : int, mines : int) -> tuple[int, int] :
     self.__mineCount = mines
+    self.__cellsLeft = cols * rows
     self.__minefield = rect_field(cols, rows)
     self.__init_cells()
     return self.__minefield.dimensions()
@@ -69,7 +73,7 @@ class board :
         self.__draw_mine_count(canvas, cell)
 
     self.__highlight_active(canvas)
-    if self.__boom :
+    if self.__game_done() :
       for cell in self.__cells :
         self.__draw_mine(canvas, cell)
 
@@ -104,13 +108,17 @@ class board :
 
   # implementation
 
+  def __game_done(self) :
+    return self.__boom or self.__won
+
+
   def __released(self, btn : int, btns : tuple[bool, bool, bool]) -> bool :
     prevState = self.__mouseBtns[btn]
     return prevState and prevState != btns[btn]
 
 
   def __place_mines(self) :
-    if self.__boom :
+    if self.__game_done() :
       return
 
     totalCells = len(self.__cells)
@@ -133,10 +141,21 @@ class board :
     self.__going = True
 
 
+  def __win(self) :
+    self.__won = True
+    print('U WIN')
+
+
   def __go_boom(self) :
-    self.__boom = True
-    self.__going = False
+    self.__boom  = True
     print('U DED')
+
+
+  def __visit_cell(self, cell : cell) :
+    if cell.is_visited() :
+      return
+    cell.visit()
+    self.__cellsLeft -= 1
 
 
   def __expand_neighbours(self, target : cell, goBoom : bool) :
@@ -147,18 +166,18 @@ class board :
       if neighbour.is_armed() :
         if not goBoom or neighbour.has_flag() :
           continue
-        neighbour.visit()
+        self.__visit_cell(neighbour)
         self.__go_boom()
       if neighbour.has_flag() :
         continue
-      neighbour.visit()
+      self.__visit_cell(neighbour)
 
 
   def __open_cell(self, target : cell) :
     if target.is_visited() :
       return
 
-    target.visit()
+    self.__visit_cell(target)
     if target.is_armed() :
       self.__go_boom()
       return
@@ -170,7 +189,7 @@ class board :
 
   def __left_click(self) :
     actCell = self.__activeCell
-    if actCell is None or self.__boom:
+    if actCell is None or self.__game_done() :
       return
     if actCell.has_flag() :
       return
@@ -179,7 +198,7 @@ class board :
 
   def __middle_click(self) :
     actCell = self.__activeCell
-    if actCell is None  or self.__boom:
+    if actCell is None or self.__game_done() :
       return
     if not actCell.is_visited() :
       return
@@ -190,11 +209,15 @@ class board :
 
   def __right_click(self) :
     actCell = self.__activeCell
-    if actCell is None  or self.__boom:
+    if actCell is None or self.__game_done() :
       return
     if actCell.is_visited() :
       return
     actCell.flip_flag()
+    if actCell.has_flag() :
+      self.__flagsRaised += 1
+    else :
+      self.__flagsRaised -= 1
 
 
   def __init_cells(self) :
