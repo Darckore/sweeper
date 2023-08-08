@@ -44,4 +44,5 @@ class cell :
     for neighbour in self.__neighbours :
       if neighbour.is_armed() :
         mineCount += 1
+    self.__minesAround = mineCount
     return mineCount

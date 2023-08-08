@@ -20,7 +20,7 @@ class strip :
   # interface
 
   def image_at(self, pos : int) :
-    rect = pygame.Rect(pos + self.spriteSide, 0, self.spriteSide, self.spriteSide)
+    rect = pygame.Rect(pos * self.spriteSide, 0, self.spriteSide, self.spriteSide)
     img  = pygame.Surface(rect.size).convert()
     img.blit(self.__sheet, (0, 0), rect)
     chroma = img.get_at((0, 0))
