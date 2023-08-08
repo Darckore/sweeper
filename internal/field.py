@@ -26,6 +26,7 @@ class board :
     self.__cells = []
     self.__mouseBtns = (False, False, False)
     self.__going = False
+    self.__boom = False
     self.__mineCount = 0
     self.__sprites = None
 
@@ -64,10 +65,10 @@ class board :
         self.__draw_mine_count(canvas, cell)
 
     self.__highlight_active(canvas)
-    # silly debug code
-    for cell in self.__cells :
-      if cell.is_armed() :
-        minefield.draw_cell(canvas, cell, (255,0,0), self.lineColour)
+    if self.__boom :
+      for cell in self.__cells :
+        if cell.is_armed() :
+          minefield.draw_cell(canvas, cell, (255,0,0), self.lineColour)
 
   #
   # Activates the cell the mouse is over
@@ -106,6 +107,9 @@ class board :
 
 
   def __place_mines(self) :
+    if self.__boom :
+      return
+
     totalCells = len(self.__cells)
     if totalCells == 0 or totalCells < self.__mineCount :
       return
@@ -127,18 +131,24 @@ class board :
 
 
   def __go_boom(self) :
+    self.__boom = True
+    self.__going = False
     print('U DED')
 
 
   def __expand_neighbours(self, target : cell, goBoom : bool) :
     for neighbour in target.neighbours() :
-      if neighbour.mines_around() != 0 :
+      if not neighbour.is_armed() and neighbour.mines_around() == 0 :
+        self.__open_cell(neighbour)
+        continue
+      if neighbour.is_armed() :
+        if not goBoom or neighbour.has_flag() :
+          continue
         neighbour.visit()
-      elif neighbour.is_armed() :
-        if goBoom and not neighbour.has_flag() :
-          self.__go_boom()
-        return
-      self.__open_cell(neighbour)
+        self.__go_boom()
+      if neighbour.has_flag() :
+        continue
+      neighbour.visit()
 
 
   def __open_cell(self, target : cell) :
@@ -156,14 +166,17 @@ class board :
 
 
   def __left_click(self) :
-    if self.__activeCell is None :
+    actCell = self.__activeCell
+    if actCell is None or self.__boom:
       return
-    self.__open_cell(self.__activeCell)
+    if actCell.has_flag() :
+      return
+    self.__open_cell(actCell)
 
 
   def __middle_click(self) :
     actCell = self.__activeCell
-    if actCell is None :
+    if actCell is None  or self.__boom:
       return
     if not actCell.is_visited() :
       return
@@ -174,7 +187,7 @@ class board :
 
   def __right_click(self) :
     actCell = self.__activeCell
-    if actCell is None :
+    if actCell is None  or self.__boom:
       return
     if actCell.is_visited() :
       return
