@@ -40,6 +40,15 @@ class board :
   # interface
 
   #
+  # Called every frame after dispatching all the events
+  #
+  def ping(self) :
+    if self.__game_done() :
+      return
+    if self.__cellsLeft == self.__mineCount :
+      self.__win()
+
+  #
   # Sets a spritesheet with number images
   #
   def attach_sprites(self, sprites : strip) :

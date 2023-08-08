@@ -62,19 +62,21 @@ class sweeper :
   # Listens to events and dispatches them
   #
   def __poll_events(self) :
+    board = self.__board
     for evt in pygame.event.get() :
       if evt.type == pygame.QUIT :
         return False
 
       if evt.type == pygame.MOUSEMOTION :
-        self.__board.make_active(pygame.mouse.get_pos())
+        board.make_active(pygame.mouse.get_pos())
       elif evt.type == pygame.MOUSEBUTTONDOWN :
-        self.__board.make_active(pygame.mouse.get_pos())
-        self.__board.store_btns(pygame.mouse.get_pressed())
+        board.make_active(pygame.mouse.get_pos())
+        board.store_btns(pygame.mouse.get_pressed())
       elif evt.type == pygame.MOUSEBUTTONUP :
-        self.__board.make_active(pygame.mouse.get_pos())
-        self.__board.on_click(pygame.mouse.get_pressed())
+        board.make_active(pygame.mouse.get_pos())
+        board.on_click(pygame.mouse.get_pressed())
 
+    board.ping()
     return True
 
   #
