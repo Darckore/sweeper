@@ -130,12 +130,15 @@ class board :
     print('U DED')
 
 
-  def __expand_neighbours(self, target : cell) :
+  def __expand_neighbours(self, target : cell, goBoom : bool) :
     for neighbour in target.neighbours() :
       if neighbour.mines_around() != 0 :
         neighbour.visit()
-      elif not neighbour.is_armed() :
-        self.__open_cell(neighbour)
+      elif neighbour.is_armed() :
+        if goBoom and not neighbour.has_flag() :
+          self.__go_boom()
+        return
+      self.__open_cell(neighbour)
 
 
   def __open_cell(self, target : cell) :
@@ -149,7 +152,7 @@ class board :
 
     if target.mines_around() != 0 :
       return
-    self.__expand_neighbours(target)
+    self.__expand_neighbours(target, False)
 
 
   def __left_click(self) :
@@ -166,7 +169,7 @@ class board :
       return
     if actCell.flags_around() != actCell.mines_around() :
       return
-    self.__expand_neighbours(actCell)
+    self.__expand_neighbours(actCell, True)
 
 
   def __right_click(self) :
