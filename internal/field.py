@@ -33,7 +33,6 @@ class board :
     self.__boom  = False
     self.__won   = False
     self.__cellsLeft   = 0
-    self.__flagsRaised = 0
     self.__mineCount   = 0
     self.__sprites = None
 
@@ -223,10 +222,6 @@ class board :
     if actCell.is_visited() :
       return
     actCell.flip_flag()
-    if actCell.has_flag() :
-      self.__flagsRaised += 1
-    else :
-      self.__flagsRaised -= 1
 
 
   def __init_cells(self) :
