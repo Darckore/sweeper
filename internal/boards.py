@@ -4,6 +4,7 @@
 
 import pygame
 
+from math import sqrt
 from internal.cell import cell
 
 #
@@ -70,6 +71,12 @@ class rect_field :
   def get_rect(self, cell : cell) -> pygame.Rect :
     points = cell.points()
     return pygame.Rect(points[0][0], points[0][1], self.cellSide, self.cellSide)
+
+  #
+  # Calculates distance between cells
+  #
+  def distance(self, src : cell, dest : cell) :
+    return src.distance_to(dest) / self.cellSide
 
   # implementation
 

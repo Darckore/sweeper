@@ -2,6 +2,8 @@
 # A board cell
 #
 
+from math import sqrt
+
 #
 # A cell on a board
 #
@@ -16,6 +18,12 @@ class cell :
     self.__minesAround = None
 
   # interface
+
+  def distance_to(self, dest) :
+    scrCentre = self.centre()
+    dstCentre = dest.centre()
+    return sqrt((dstCentre[0] - scrCentre[0]) ** 2 +
+                (dstCentre[1] - scrCentre[1]) ** 2)
 
   def arm(self) :
     self.__armed = True

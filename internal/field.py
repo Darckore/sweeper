@@ -161,12 +161,15 @@ class board :
 
     if self.__going or self.__activeCell is None :
       return
-
+    
+    dmz = 2 # how many free cells to leave around the starting one
     minesLeft = self.__mineCount
     while minesLeft > 0 :
       rndIdx = random.randint(0, totalCells - 1)
       selectedCell = self.__cells[rndIdx]
       if selectedCell == self.__activeCell :
+        continue
+      if self.__minefield.distance(selectedCell, self.__activeCell) <= dmz :
         continue
       if selectedCell.is_armed() :
         continue
