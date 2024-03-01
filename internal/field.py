@@ -26,7 +26,6 @@ class board :
   detonatedBombColour = (255, 0, 0)
 
   def __reset(self) :
-    self.__minefield  = None
     self.__activeCell = None
     self.__cells = []
     self.__mouseBtns = (False, False, False)
@@ -37,10 +36,11 @@ class board :
     self.__mineCount = 0
     self.__minesLeft = 0
     self.__minesLeftPrev = 0
-    self.__sprites = None
 
   def __init__(self, baseCaption) :
     self.__reset()
+    self.__sprites = None
+    self.__minefield  = None
     self.__baseCaption = baseCaption
 
   # interface
