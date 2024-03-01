@@ -53,7 +53,7 @@ class sweeper :
   #
   def __load_res(self) :
     self.__sprites = strip(64, 64, 'assets/field_sprites.png')
-    self.__endSprites = strip(500, 64, 'assets/win_fail.png')
+    self.__endSprites = strip(256, 256, 'assets/win_fail.png')
 
   #
   # Inits the window and returns the resulting surface
@@ -103,8 +103,12 @@ class sweeper :
   # Draws an overlayed image
   #
   def __overlay(self, img : pygame.Surface) :
-    img = pygame.transform.scale(img, img.get_size())
-    self.__canvas.blit(img, (0,0))
+    canvas = self.__canvas
+    canvasCX = canvas.get_width() / 2
+    canvasCY = canvas.get_height() / 2
+    imgCX = img.get_width() / 2
+    imgCY = img.get_height() / 2
+    canvas.blit(img, (canvasCX - imgCX, canvasCY - imgCY))
 
 
   #
