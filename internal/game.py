@@ -18,7 +18,6 @@ class sweeper :
     self.__board = board(self.captionBase)
     self.__canvas = self.__initial_setup(initialSize)
     self.__sprites = None
-    self.__endSprites = None
     self.__restart = False
 
   # interface
@@ -53,7 +52,6 @@ class sweeper :
   #
   def __load_res(self) :
     self.__sprites = strip(64, 64, 'assets/field_sprites.png')
-    self.__endSprites = strip(256, 256, 'assets/win_fail.png')
 
   #
   # Inits the window and returns the resulting surface
@@ -100,27 +98,9 @@ class sweeper :
     return True
 
   #
-  # Draws an overlayed image
-  #
-  def __overlay(self, img : pygame.Surface) :
-    canvas = self.__canvas
-    canvasCX = canvas.get_width() / 2
-    canvasCY = canvas.get_height() / 2
-    imgCX = img.get_width() / 2
-    imgCY = img.get_height() / 2
-    canvas.blit(img, (canvasCX - imgCX, canvasCY - imgCY))
-
-
-  #
   # Draws the board
   #
   def __present(self) :
     board = self.__board
     board.draw(self.__canvas)
-
-    if board.won() :
-      self.__overlay(self.__endSprites.image_at(0))
-    elif board.failed() :
-      self.__overlay(self.__endSprites.image_at(1))
-
     pygame.display.flip()

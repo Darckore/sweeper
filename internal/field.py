@@ -21,6 +21,8 @@ class board :
   fillColour  = (125, 180, 138)
   boardColour = (0, 50, 50)
   lineColour  = (0, 0, 0)
+  winLineColour = (0, 0, 100)
+  failLineColour = (100, 0, 0)
   highlightColour = (0, 100, 30)
   neighbourHighlightColour = (0, 60, 30)
   detonatedBombColour = (255, 0, 0)
@@ -85,15 +87,21 @@ class board :
     if minefield is None :
       return
 
+    lineClr = self.lineColour
+    if self.won() :
+      lineClr = self.winLineColour
+    elif self.failed() :
+      lineClr = self.failLineColour
+
     for cell in self.__cells :
       if not cell.is_visited() :
-        minefield.draw_cell(canvas, cell, self.boardColour, self.lineColour)
+        minefield.draw_cell(canvas, cell, self.boardColour, lineClr)
         self.__draw_flag(canvas, cell)
       else :
         if not cell.is_armed() :
-          minefield.draw_cell(canvas, cell, self.fillColour, self.lineColour)
+          minefield.draw_cell(canvas, cell, self.fillColour, lineClr)
         else :
-          minefield.draw_cell(canvas, cell, self.detonatedBombColour, self.lineColour)
+          minefield.draw_cell(canvas, cell, self.detonatedBombColour, lineClr)
         self.__draw_mine_count(canvas, cell)
 
     self.__highlight_active(canvas)
