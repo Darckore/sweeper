@@ -22,7 +22,7 @@ class board :
   boardColour = (0, 50, 50)
   lineColour  = (0, 0, 0)
   highlightColour = (0, 100, 30)
-  neighboutHighlightColour = (0, 60, 30)
+  neighbourHighlightColour = (0, 60, 30)
   detonatedBombColour = (255, 0, 0)
 
   def __reset(self) :
@@ -293,5 +293,5 @@ class board :
     for neighbour in actCell.neighbours() :
       if neighbour.is_visited() :
         continue
-      self.__minefield.draw_cell(canvas, neighbour, self.neighboutHighlightColour, self.lineColour)
+      self.__minefield.draw_cell(canvas, neighbour, self.neighbourHighlightColour, self.lineColour)
       self.__draw_flag(canvas, neighbour)
